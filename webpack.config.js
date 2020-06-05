@@ -4,18 +4,21 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.ts',
+    entry: './src/index.tsx',
     devtool: 'inline-source-map',
     plugins: [
         new CleanWebpackPlugin(),
-        new HTMLWebpackPlugin()
+        new HTMLWebpackPlugin({
+            title: 'Custom template with root-id div',
+            template: 'public/index.html'
+        })
     ],
     devServer: {
-        contentBase: './dist'
+        contentBase: './public'
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist')
+        path: path.resolve(__dirname, 'public')
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js']
