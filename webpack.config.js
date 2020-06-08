@@ -7,10 +7,10 @@ module.exports = {
     entry: './src/index.tsx',
     devtool: 'inline-source-map',
     plugins: [
-        new CleanWebpackPlugin(),
+        // new CleanWebpackPlugin(), for production only
         new HTMLWebpackPlugin({
             title: 'Custom template with root-id div',
-            template: 'public/index.html'
+            template: './public/index.html'
         })
     ],
     devServer: {
