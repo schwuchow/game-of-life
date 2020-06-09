@@ -5,7 +5,8 @@ import './Cellboard.scss';
 interface CellboardState {
     width: number,
     height: number,
-    cells: CellType[]
+    cells: CellType[][],
+    prevCells: CellType[][]
 }
 
 interface CellType {
@@ -22,7 +23,8 @@ class Cellboard extends React.Component<{}, CellboardState> {
         this.state = {
             width: 250,
             height: 250,
-            cells: []
+            cells: [],
+            prevCells: []
         }
     }
 
@@ -31,33 +33,35 @@ class Cellboard extends React.Component<{}, CellboardState> {
     }
 
     initializeCellState() {
-        let startCells = [];
-        for (let i = 0; i < this.state.width; i+=25) {
-            for (let j = 0; j < this.state.height; j+=25) {
+        let startCells: CellType[][] = [];
+        for (let i = 0; i < this.state.width/10; i++) {
+            startCells[i] = [];
+            for (let j = 0; j < this.state.height/10; j++) {
                 let cell: CellType = {
-                    x: i,
-                    y: j,
+                    x: 25*i,
+                    y: 25*j,
                     size: 25,
-                    curState: 0,
+                    curState: Math.round(Math.random()),
                     prevState: 0
                 };
-                startCells.push(cell);
+                startCells[i][j] = cell;
             }
         }
         this.setState({ cells: startCells});
     }
 
     renderCells() {
-        return this.state.cells.map(({x, y, size, curState, prevState}, idx) => {
-            return <Cell key={idx} x={x} y={y} size={size} curState={curState} prevState={prevState} />
+        return this.state.cells.map((row, idx) => {
+            let columns = row.map(({x, y, size, curState, prevState}, idx) => {
+                return <Cell key={idx} x={x} y={y} size={size} curState={curState} prevState={prevState} />
+            });
+            return columns;
         })
     }
 
     render() {
         return(
             <div className="cellboard">
-                {/* <canvas width={this.state.width} height={this.state.height} style={{border: "1px solid #000000"}}>
-                </canvas> */}
                 {this.renderCells()}
             </div>
         );
