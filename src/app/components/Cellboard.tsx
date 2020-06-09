@@ -1,36 +1,64 @@
 import React from 'react';
 import Cell from './Cell';
-
-interface CellboardProps {
-
-}
+import './Cellboard.scss';
 
 interface CellboardState {
     width: number,
     height: number,
-    cells: Array<Cell>
+    cells: CellType[]
 }
 
-class Cellboard extends React.Component<CellboardProps, CellboardState> {
-    constructor(props: any) {
+interface CellType {
+    x: number,
+    y: number,
+    size: number,
+    curState: number,
+    prevState: number
+}
+
+class Cellboard extends React.Component<{}, CellboardState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
-            width: 400,
-            height: 400,
+            width: 250,
+            height: 250,
             cells: []
         }
     }
 
-    printCells() {
-        return <Cell />
+    componentDidMount() {
+        this.initializeCellState();
+    }
+
+    initializeCellState() {
+        let startCells = [];
+        for (let i = 0; i < this.state.width; i+=25) {
+            for (let j = 0; j < this.state.height; j+=25) {
+                let cell: CellType = {
+                    x: i,
+                    y: j,
+                    size: 25,
+                    curState: 0,
+                    prevState: 0
+                };
+                startCells.push(cell);
+            }
+        }
+        this.setState({ cells: startCells});
+    }
+
+    renderCells() {
+        return this.state.cells.map(({x, y, size, curState, prevState}, idx) => {
+            return <Cell key={idx} x={x} y={y} size={size} curState={curState} prevState={prevState} />
+        })
     }
 
     render() {
         return(
-            <div>
-                <canvas width={this.state.width} height={this.state.height} style={{border: "1px solid #000000"}}>
-                </canvas>
-                {this.printCells()}
+            <div className="cellboard">
+                {/* <canvas width={this.state.width} height={this.state.height} style={{border: "1px solid #000000"}}>
+                </canvas> */}
+                {this.renderCells()}
             </div>
         );
     }
