@@ -4,8 +4,7 @@ interface CellProps {
     x: number,
     y: number,
     size: number,
-    curState: number,
-    prevState: number
+    curState: number
 }
 
 class Cell extends React.Component<CellProps, {}> {

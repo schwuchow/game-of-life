@@ -6,25 +6,24 @@ interface CellboardState {
     width: number,
     height: number,
     cells: CellType[][],
-    prevCells: CellType[][]
+    cellSize: number
 }
 
 interface CellType {
     x: number,
     y: number,
     size: number,
-    curState: number,
-    prevState: number
+    curState: number
 }
 
 class Cellboard extends React.Component<{}, CellboardState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            width: 250,
-            height: 250,
+            width: 500,
+            height: 500,
             cells: [],
-            prevCells: []
+            cellSize: 25
         }
     }
 
@@ -33,35 +32,76 @@ class Cellboard extends React.Component<{}, CellboardState> {
     }
 
     initializeCellState() {
+        let rows = this.state.width / this.state.cellSize;
+        let columns = this.state.height / this.state.cellSize;
         let startCells: CellType[][] = [];
-        for (let i = 0; i < this.state.width/10; i++) {
+
+        for (let i = 0; i < rows; i++) {
             startCells[i] = [];
-            for (let j = 0; j < this.state.height/10; j++) {
+            for (let j = 0; j < columns; j++) {
                 let cell: CellType = {
-                    x: 25*i,
-                    y: 25*j,
-                    size: 25,
+                    x: this.state.cellSize*i,
+                    y: this.state.cellSize*j,
+                    size: this.state.cellSize,
                     curState: Math.round(Math.random()),
-                    prevState: 0
                 };
                 startCells[i][j] = cell;
             }
         }
-        this.setState({ cells: startCells});
+        this.setState({ cells: startCells });
     }
 
     renderCells() {
-        return this.state.cells.map((row, idx) => {
-            let columns = row.map(({x, y, size, curState, prevState}, idx) => {
-                return <Cell key={idx} x={x} y={y} size={size} curState={curState} prevState={prevState} />
+        return this.state.cells.map(row => {
+            let columns = row.map(({x, y, size, curState}, idx) => {
+                return <Cell key={idx} x={x} y={y} size={size} curState={curState} />
             });
             return columns;
         })
     }
 
+    generate = (e: React.MouseEvent<HTMLDivElement>) => {
+        let newCells: CellType[][] = [...this.state.cells];
+        let neighborCount = 0;
+        // TODO change border cells
+        for( let i = 1; i < (this.state.width/this.state.cellSize)-1; i++) {
+            for (let j = 1; j < (this.state.height/this.state.cellSize)-1; j++) {
+                // console.log(this.state.cells[i][j]);
+                neighborCount = this.countNeighbors(i, j);
+
+                this.applyRulesOfLife(neighborCount, newCells, i, j);
+            }
+        }
+
+        this.setState({ cells: newCells });
+    }
+
+    countNeighbors(curX: number, curY: number) {
+        let neighbors = 0;
+
+        for (let k = -1; k <= 1; k++) {
+            for (let m = -1; m <= 1; m++) {
+                // TODO take out middle el
+                let {curState} = this.state.cells[curX+k][curY+m];
+                neighbors += curState;
+            }
+        }
+        return neighbors;
+    }
+
+    applyRulesOfLife(neighbors: number, newCells: CellType[][], curX: number, curY: number) {
+        let cell = newCells[curX][curY];
+        let cellState = cell.curState;
+
+        if (cellState === 1 && neighbors >= 4) cell.curState = 0; // Overpopulation (DEATH)
+        else if (cellState === 1 && neighbors <= 1) cell.curState = 0; // Lonliness (DEATH)
+        else if (cellState === 0 && neighbors === 3) cell.curState = 1; // BIRTH
+        else {} // STASIS: stays alive / dead
+    }
+
     render() {
         return(
-            <div className="cellboard">
+            <div className="cellboard" onClick={this.generate}>
                 {this.renderCells()}
             </div>
         );
