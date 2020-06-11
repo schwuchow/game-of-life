@@ -1,0 +1,10 @@
+.settings {
+    grid-area: settings;
+    // border: 1px solid black;
+    width: 200px;
+    position: relative;
+
+    > button, input {
+        cursor: pointer;
+    }
+}

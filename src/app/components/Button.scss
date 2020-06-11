@@ -1,0 +1,15 @@
+.button {
+    font-size: 2rem;
+    letter-spacing: 2rem;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    // border: 1px solid #4CAF50;
+    margin: 1%;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    transition: .2s;
+
+    &:hover {
+        background-color: #4CAF50;
+    }
+}

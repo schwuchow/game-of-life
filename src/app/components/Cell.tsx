@@ -13,7 +13,7 @@ class Cell extends React.Component<CellProps, {}> {
     }
 
     evalState() {
-        return (this.props.curState === 1)? 'black': 'white';
+        return (this.props.curState === 1)? '#4CAF50': 'white';
     }
 
     render() {
@@ -24,7 +24,8 @@ class Cell extends React.Component<CellProps, {}> {
             top: `${this.props.y}px`,
             width: `${this.props.size}px`,
             height: `${this.props.size}px`,
-            border: "1px solid #000",
+            border: "1px solid #4CAF50",
+            borderRadius: "10px",
             backgroundColor
         }
         return(

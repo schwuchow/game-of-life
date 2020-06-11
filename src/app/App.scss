@@ -1,0 +1,17 @@
+.app {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 6fr;
+    grid-template-areas:
+        "title title title"
+        "cellboard cellboard settings";
+    grid-row-gap: 1rem;
+    margin: 2rem;
+
+    h1 {
+        grid-area: title;
+        text-align: center;
+        letter-spacing: 3rem;
+        line-height: 3rem;
+    }
+}

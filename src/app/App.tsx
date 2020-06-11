@@ -5,9 +5,10 @@ import Settings from './components/Settings';
 
 const App: React.FC = () => {
     return (
-        <div>
+        <div className="app">
+            <h1>CONWAY'S GAME OF LIFE</h1>
             <Cellboard />
-            {/* <Settings /> */}
+            <Settings />
         </div>
     );
 };

@@ -21,7 +21,7 @@ class Cellboard extends React.Component<{}, CellboardState> {
         super(props);
         this.state = {
             width: 800,
-            height: 600,
+            height: 500,
             cells: [],
             cellSize: 25
         }
