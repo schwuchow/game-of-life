@@ -1,20 +1,39 @@
 import React from 'react';
 import './Slider.scss';
+import { CellContext } from './CellContext';
 
 interface SliderProps {
-    label: string
+    label: string,
+    value: number,
+    min: number,
+    max: number,
+    step: number
 }
 
 const Slider: React.FC<SliderProps> = props => {
+    const {state, setState} = React.useContext(CellContext);
 
-    const doSomething = () => {
-
+    const doSomething = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (props.label === "WIDTH") {
+            setState({ ...state, width: e.target.value});
+        } else if (props.label === "HEIGHT") {
+            setState({ ...state, height: e.target.value});
+        } else if (props.label === "DENSITY") {
+            setState({ ...state, density: e.target.value});
+        }
     }
 
     return (
-        <div>
+        <div className="slider-container">
             <label>{props.label}</label>
-            <input className="slider" onChange={doSomething} type="range" min="100" max="1000" value="500"></input>
+            <input className="slider"
+                   onChange={doSomething}
+                   type="range"
+                   min={props.min}
+                   max={props.max}
+                   step={props.step}
+                   value={props.value}>
+            </input>
         </div>
     );
 };

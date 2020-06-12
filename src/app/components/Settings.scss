@@ -1,7 +1,8 @@
 .settings {
     grid-area: settings;
+    align-self: center;
     // border: 1px solid black;
-    width: 200px;
+    width: 100%;
     position: relative;
 
     > button, input {

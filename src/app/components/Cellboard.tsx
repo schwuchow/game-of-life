@@ -3,13 +3,6 @@ import Cell from './Cell';
 import './Cellboard.scss';
 import { CellContext } from './CellContext';
 
-interface CellboardState {
-    width: number,
-    height: number,
-    cells: CellType[][],
-    cellSize: number
-}
-
 interface CellType {
     x: number,
     y: number,
@@ -18,15 +11,23 @@ interface CellType {
 }
 
 const Cellboard: React.FC = () => {
-    const {state, setState} = React.useContext(CellContext);
+    const {state, setState} = useContext(CellContext);
 
     useEffect(() => {
         initializeCellState();
     }, []);
 
     useEffect(() => {
+        resize();
+    }, [state.width, state.height]);
+
+    useEffect(() => {
         generate();
     });
+
+    const resize = () => {
+        initializeCellState();
+    }
 
     const initializeCellState = () => {
         let rows = state.height / state.cellSize;
@@ -62,7 +63,7 @@ const Cellboard: React.FC = () => {
     }
 
     const generate = () => {
-        if (state.shouldRun) {
+        if (state.cells.length) {
             let rows = state.height/state.cellSize;
             let columns = state.width/state.cellSize;
             let newCells: CellType[][] = [...state.cells];
@@ -77,9 +78,10 @@ const Cellboard: React.FC = () => {
                 }
             }
 
-            setState({ cells: newCells });
-
-            window.requestAnimationFrame(generate);
+            if (state.shouldRun) {
+                setState({ cells: newCells });
+                window.requestAnimationFrame(generate);
+            }
         }
     }
 

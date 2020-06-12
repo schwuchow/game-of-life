@@ -9,7 +9,8 @@ interface AppState {
     height: number,
     cells: CellType[][],
     cellSize: number,
-    shouldRun: boolean
+    shouldRun: boolean,
+    density: number
 }
 
 interface CellType {
@@ -25,7 +26,8 @@ const App: React.FC = () => {
         height: 500,
         cells: [],
         cellSize: 25,
-        shouldRun: false
+        shouldRun: false,
+        density: 0.3
     });
 
     return (
