@@ -34,6 +34,7 @@ const Slider: React.FC<SliderProps> = props => {
                    step={props.step}
                    value={props.value}>
             </input>
+            <span>{props.value}</span>
         </div>
     );
 };

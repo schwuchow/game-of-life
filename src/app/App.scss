@@ -1,7 +1,7 @@
 .app {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 6fr;
+    grid-template-rows: 1fr 3fr;
     grid-template-areas:
         "title title title"
         "cellboard cellboard settings";
@@ -13,5 +13,12 @@
         text-align: center;
         letter-spacing: 3rem;
         line-height: 3rem;
+        transition: .5s;
+        opacity: 0.2;
+
+        &:hover {
+            letter-spacing: 1rem;
+            opacity: 1;
+        }
     }
 }
