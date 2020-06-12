@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import Cell from './Cell';
 import './Cellboard.scss';
+import { CellContext } from './CellContext';
 
 interface CellboardState {
     width: number,
@@ -16,24 +17,20 @@ interface CellType {
     curState: number
 }
 
-class Cellboard extends React.Component<{}, CellboardState> {
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            width: 800,
-            height: 500,
-            cells: [],
-            cellSize: 25
-        }
-    }
+const Cellboard: React.FC = () => {
+    const {state, setState} = React.useContext(CellContext);
 
-    componentDidMount() {
-        this.initializeCellState();
-    }
+    useEffect(() => {
+        initializeCellState();
+    }, []);
 
-    initializeCellState() {
-        let rows = this.state.height / this.state.cellSize;
-        let columns = this.state.width / this.state.cellSize;
+    useEffect(() => {
+        generate();
+    });
+
+    const initializeCellState = () => {
+        let rows = state.height / state.cellSize;
+        let columns = state.width / state.cellSize;
         let startCells: CellType[][] = [];
 
         for (let i = 0; i < rows; i++) {
@@ -44,19 +41,19 @@ class Cellboard extends React.Component<{}, CellboardState> {
                 if (random > .1) random = 0
                 else {random = 1}
                 let cell: CellType = {
-                    y: this.state.cellSize*i,
-                    x: this.state.cellSize*j,
-                    size: this.state.cellSize,
+                    y: state.cellSize*i,
+                    x: state.cellSize*j,
+                    size: state.cellSize,
                     curState: random,
                 };
                 startCells[i][j] = cell;
             }
         }
-        this.setState({ cells: startCells });
+        setState({ ...state, cells: startCells});
     }
 
-    renderCells() {
-        return this.state.cells.map(row => {
+    const renderCells = () => {
+        return state.cells.map((row:CellType[]) => {
             let columns = row.map(({x, y, size, curState}, idx) => {
                 return <Cell key={idx} x={x} y={y} size={size} curState={curState} />
             });
@@ -64,27 +61,29 @@ class Cellboard extends React.Component<{}, CellboardState> {
         })
     }
 
-    generate = () => {
-        let rows = this.state.height/this.state.cellSize;
-        let columns = this.state.width/this.state.cellSize;
-        let newCells: CellType[][] = [...this.state.cells];
-        let neighborCount = 0;
-        // TODO change border cells
-        for( let i = 1; i < rows-1; i++) {
-            for (let j = 1; j < columns-1; j++) {
-                // console.log(this.state.cells[i][j]);
-                neighborCount = this.countNeighbors(i, j);
+    const generate = () => {
+        if (state.shouldRun) {
+            let rows = state.height/state.cellSize;
+            let columns = state.width/state.cellSize;
+            let newCells: CellType[][] = [...state.cells];
+            let neighborCount = 0;
+            // TODO change border cells
+            for( let i = 1; i < rows-1; i++) {
+                for (let j = 1; j < columns-1; j++) {
+                    // console.log(this.state.cells[i][j]);
+                    neighborCount = countNeighbors(i, j);
 
-                this.applyRulesOfLife(neighborCount, newCells, i, j);
+                    applyRulesOfLife(neighborCount, newCells, i, j);
+                }
             }
+
+            setState({ cells: newCells });
+
+            window.requestAnimationFrame(generate);
         }
-
-        this.setState({ cells: newCells });
-
-        window.requestAnimationFrame(this.generate);
     }
 
-    countNeighbors(curX: number, curY: number) {
+    const countNeighbors = (curX: number, curY: number) => {
         let neighbors = 0;
         // console.log('Neighbour');
         for (let k = -1; k <= 1; k++) {
@@ -92,7 +91,7 @@ class Cellboard extends React.Component<{}, CellboardState> {
                 if (!(k === 0 && m === 0)) {
                     // console.log(this.state.cells[curX+k][curY+m], k, m);
                     // console.log(curX+k,curY+m, k, m);
-                    let {curState} = this.state.cells[curX+k][curY+m];
+                    let {curState} = state.cells[curX+k][curY+m];
                     neighbors += curState;
                 }
             }
@@ -100,9 +99,9 @@ class Cellboard extends React.Component<{}, CellboardState> {
         return neighbors;
     }
 
-    applyRulesOfLife(neighbors: number, newCells: CellType[][], curX: number, curY: number) {
+    const applyRulesOfLife = (neighbors: number, newCells: CellType[][], curX: number, curY: number) => {
         let newCell = newCells[curX][curY];
-        let cellState = this.state.cells[curX][curY].curState;
+        let cellState = state.cells[curX][curY].curState;
 
         if (cellState === 1 && neighbors >= 4) newCell.curState = 0; // Overpopulation (DEATH)
         else if (cellState === 1 && neighbors <= 1) newCell.curState = 0; // Lonliness (DEATH)
@@ -110,13 +109,11 @@ class Cellboard extends React.Component<{}, CellboardState> {
         else {} // STASIS: stays alive / dead
     }
 
-    render() {
-        return(
-            <div className="cellboard" onClick={this.generate}>
-                {this.renderCells()}
-            </div>
-        );
-    }
+    return(
+        <div className="cellboard">
+            {renderCells()}
+        </div>
+    );
 }
 
 export default Cellboard;
