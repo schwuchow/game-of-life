@@ -13,7 +13,7 @@ interface SliderProps {
 const Slider: React.FC<SliderProps> = props => {
     const {state, setState} = React.useContext(CellContext);
 
-    const doSomething = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleStateOnSlide = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (props.label === "WIDTH") {
             setState({ ...state, width: e.target.value});
         } else if (props.label === "HEIGHT") {
@@ -27,7 +27,7 @@ const Slider: React.FC<SliderProps> = props => {
         <div className="slider-container">
             <label>{props.label}</label>
             <input className="slider"
-                   onChange={doSomething}
+                   onChange={handleStateOnSlide}
                    type="range"
                    min={props.min}
                    max={props.max}

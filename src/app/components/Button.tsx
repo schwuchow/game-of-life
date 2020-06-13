@@ -9,17 +9,19 @@ interface ButtonProps {
 const Button: React.FC<ButtonProps> = props => {
     const {state, setState} = React.useContext(CellContext);
 
-    const doSomething = () => {
+    const handleStateOnClick = () => {
         if (props.action === "START") {
             setState({...state, shouldRun: true});
         } else if (props.action === "STOP") {
             setState({...state, shouldRun: false});
+        } else if (props.action === "RESET") {
+            setState({...state, width: 800, height: 500, density: .3, shouldRun: false});
         }
     }
 
     return (
         <>
-            <button className="button" onClick={doSomething} type="button">{props.action}</button>
+            <button className="button" onClick={handleStateOnClick} type="button">{props.action}</button>
         </>
     );
 };

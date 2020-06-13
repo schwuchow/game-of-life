@@ -22,10 +22,18 @@ const Cellboard: React.FC = () => {
     }, [state.width, state.height]);
 
     useEffect(() => {
-        generate();
+        changeDensity();
+    }, [state.density]);
+
+    useEffect(() => {
+        // generate();
     });
 
     const resize = () => {
+        initializeCellState();
+    }
+
+    const changeDensity = () => {
         initializeCellState();
     }
 
@@ -39,7 +47,7 @@ const Cellboard: React.FC = () => {
             for (let j = 0; j < columns; j++) {
                 // let random = Math.round(Math.random());
                 let random = Math.random();
-                if (random > .1) random = 0
+                if (random > state.density) random = 0
                 else {random = 1}
                 let cell: CellType = {
                     y: state.cellSize*i,

@@ -7,31 +7,28 @@ interface CellProps {
     curState: number
 }
 
-class Cell extends React.Component<CellProps, {}> {
-    constructor(props: CellProps) {
-        super(props);
+const Cell: React.FC<CellProps> = (props) => {
+
+    let backgroundColor = evalState();
+    const cellStyle = {
+        position: 'absolute',
+        left: `${props.x}px`,
+        top: `${props.y}px`,
+        width: `${props.size}px`,
+        height: `${props.size}px`,
+        border: "1px solid #4CAF50",
+        borderRadius: "10px",
+        backgroundColor
     }
 
-    evalState() {
-        return (this.props.curState === 1)? '#4CAF50': 'white';
+    function evalState() {
+        return (props.curState === 1)? '#4CAF50': 'white';
     }
 
-    render() {
-        let backgroundColor = this.evalState();
-        const cellStyle = {
-            position: 'absolute',
-            left: `${this.props.x}px`,
-            top: `${this.props.y}px`,
-            width: `${this.props.size}px`,
-            height: `${this.props.size}px`,
-            border: "1px solid #4CAF50",
-            borderRadius: "10px",
-            backgroundColor
-        }
-        return(
-            <div style={cellStyle}></div>
-        );
-    }
+
+    return(
+        <div style={cellStyle} className="cell"></div>
+    );
 }
 
 export default Cell;

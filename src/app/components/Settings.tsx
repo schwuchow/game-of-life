@@ -12,9 +12,9 @@ const Settings: React.FC = () => {
             <Button action="START"/>
             <Button action="STOP"/>
             <Button action="RESET"/>
-            <Slider label="WIDTH" min={300} max={1000} step={state.cellSize} value={state.width}/>
-            <Slider label="HEIGHT" min={300} max={1000} step={state.cellSize} value={state.height}/>
-            <Slider label="DENSITY" min={0} max={1} step={0.1} value={state.density}/>
+            <Slider label="WIDTH" min={200} max={850} step={state.cellSize} value={state.width}/>
+            <Slider label="HEIGHT" min={200} max={500} step={state.cellSize} value={state.height}/>
+            <Slider label="DENSITY" min={0.1} max={0.5} step={0.05} value={state.density}/>
         </div>
     );
 };

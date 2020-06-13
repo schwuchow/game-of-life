@@ -1,5 +1,4 @@
 .slider-container {
-
     width: 400px;
     margin: 2rem 0;
     display: flex;
@@ -45,7 +44,7 @@
         margin-left: 1rem;
     }
 
-    &:hover > * {
+    &:hover > *, &:active > * {
         opacity: 1;
     }
 }
