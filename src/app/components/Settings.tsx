@@ -5,7 +5,7 @@ import './Settings.scss';
 import { CellContext } from './CellContext';
 
 const Settings: React.FC = () => {
-    const {state, setState} = React.useContext(CellContext);
+    const {state} = React.useContext(CellContext);
 
     return (
         <div className="settings">

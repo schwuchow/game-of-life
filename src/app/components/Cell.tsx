@@ -25,9 +25,8 @@ const Cell: React.FC<CellProps> = (props) => {
         return (props.curState === 1)? '#4CAF50': 'white';
     }
 
-
     return(
-        <div style={cellStyle} className="cell"></div>
+        <div style={cellStyle}></div>
     );
 }
 

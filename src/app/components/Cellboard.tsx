@@ -12,6 +12,7 @@ interface CellType {
 
 const Cellboard: React.FC = () => {
     const {state, setState} = useContext(CellContext);
+    let frame: number;
 
     useEffect(() => {
         initializeCellState();
@@ -26,8 +27,11 @@ const Cellboard: React.FC = () => {
     }, [state.density]);
 
     useEffect(() => {
-        // generate();
-    });
+        if (state.shouldRun) {
+            generate();
+        }
+        return() => window.cancelAnimationFrame(frame);
+    }, [state.shouldRun]);
 
     const resize = () => {
         initializeCellState();
@@ -45,10 +49,7 @@ const Cellboard: React.FC = () => {
         for (let i = 0; i < rows; i++) {
             startCells[i] = [];
             for (let j = 0; j < columns; j++) {
-                // let random = Math.round(Math.random());
-                let random = Math.random();
-                if (random > state.density) random = 0
-                else {random = 1}
+                let random = calculateRandom(i, j, rows, columns);
                 let cell: CellType = {
                     y: state.cellSize*i,
                     x: state.cellSize*j,
@@ -58,16 +59,15 @@ const Cellboard: React.FC = () => {
                 startCells[i][j] = cell;
             }
         }
-        setState({ ...state, cells: startCells});
+        setState({ ...state, cells: startCells });
     }
 
-    const renderCells = () => {
-        return state.cells.map((row:CellType[]) => {
-            let columns = row.map(({x, y, size, curState}, idx) => {
-                return <Cell key={idx} x={x} y={y} size={size} curState={curState} />
-            });
-            return columns;
-        })
+    const calculateRandom = (i: number, j: number, rows: number, columns: number) => {
+        return (
+            Math.random() > state.density
+            || !(i > rows/3 && i < rows*2/3)
+            || !(j > columns/3 && j < columns*2/3)
+            )? 0 : 1;
     }
 
     const generate = () => {
@@ -86,10 +86,8 @@ const Cellboard: React.FC = () => {
                 }
             }
 
-            if (state.shouldRun) {
-                setState({ cells: newCells });
-                window.requestAnimationFrame(generate);
-            }
+            setState({ ...state, cells: newCells });
+            frame = window.requestAnimationFrame(generate);
         }
     }
 
@@ -117,6 +115,15 @@ const Cellboard: React.FC = () => {
         else if (cellState === 1 && neighbors <= 1) newCell.curState = 0; // Lonliness (DEATH)
         else if (cellState === 0 && neighbors === 3) newCell.curState = 1; // BIRTH
         else {} // STASIS: stays alive / dead
+    }
+
+    const renderCells = () => {
+        return state.cells.map((row:CellType[]) => {
+            let columns = row.map(({x, y, size, curState}, idx) => {
+                return <Cell key={idx} x={x} y={y} size={size} curState={curState} />
+            });
+            return columns;
+        })
     }
 
     return(
