@@ -19,11 +19,18 @@ const Cellboard: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        initializeCellState();
+        return() => window.cancelAnimationFrame(frame);
+    }, [state.reset]);
+
+    useEffect(() => {
         resize();
+        return() => window.cancelAnimationFrame(frame);
     }, [state.width, state.height]);
 
     useEffect(() => {
         changeDensity();
+        return() => window.cancelAnimationFrame(frame);
     }, [state.density]);
 
     useEffect(() => {

@@ -10,7 +10,8 @@ interface AppState {
     cells: CellType[][],
     cellSize: number,
     shouldRun: boolean,
-    density: number
+    density: number,
+    reset: number
 }
 
 interface CellType {
@@ -27,7 +28,8 @@ const App: React.FC = () => {
         cells: [],
         cellSize: 25,
         shouldRun: false,
-        density: 0.3
+        density: 0.3,
+        reset: 0
     });
 
     return (

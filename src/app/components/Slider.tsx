@@ -26,7 +26,7 @@ const Slider: React.FC<SliderProps> = props => {
     return (
         <div className="slider-container">
             <label>{props.label}</label>
-            <input className="slider"
+            <input className={state.shouldRun? "slider slider--disabled" : "slider"}
                    onChange={handleStateOnSlide}
                    type="range"
                    min={props.min}

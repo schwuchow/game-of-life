@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = props => {
         } else if (props.action === "STOP") {
             setState({...state, shouldRun: false});
         } else if (props.action === "RESET") {
-            setState({...state, width: 800, height: 500, density: .3, shouldRun: false});
+            setState({...state, width: 800, height: 500, density: .3, shouldRun: false, reset: state.reset+1});
         }
     }
 
